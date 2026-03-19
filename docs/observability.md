@@ -107,9 +107,20 @@ The `/` page renders the Runs section below the Kanban board:
 
 Entries RUN-001 through RUN-003 were seeded from git commit history. Their `promptSource` is `"retrospective"` or `"reconstructed"` — meaning the prompt text is an approximation of what was sent, not a verbatim record. This is clearly indicated on the dashboard. All future runs logged via the `run.js` CLI will use `"exact"`.
 
+## Vercel data packaging
+
+Vercel builds with Root Directory = `dashboard/`, so `board/` is outside the build context. The dashboard reads from `dashboard/data/` instead:
+
+- **Canonical source**: `board/backlog.json` and `board/runs.json` (repo root)
+- **Dashboard copies**: `dashboard/data/backlog.json` and `dashboard/data/runs.json` (committed, used at build time)
+- **Sync script**: `dashboard/scripts/sync-board-data.js` copies root → data/ when available
+- **prebuild hook**: `npm run build` auto-runs the sync; on Vercel the sync no-ops and committed copies serve as fallback
+
+**Workflow**: edit `board/*.json` as normal → run `npm run build` (or `npm run sync`) from `dashboard/` before committing → both files stay in sync.
+
 ## Design principles
 
-- **File-backed**: all data in `board/runs.json`, committed to git
+- **File-backed**: canonical data in `board/runs.json` and `board/backlog.json`, committed to git
 - **No daemons**: no background processes, no polling
 - **Public-safe**: no secrets, no personal data, runs are safe to deploy publicly
 - **Board-linked**: runs reference card IDs but are stored separately (board stays clean)

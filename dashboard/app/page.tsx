@@ -20,7 +20,7 @@ interface BoardData {
 
 function getBoardData(): BoardData {
   try {
-    const boardPath = join(process.cwd(), "..", "board", "backlog.json");
+    const boardPath = join(process.cwd(), "data", "backlog.json");
     const raw = readFileSync(boardPath, "utf-8");
     return JSON.parse(raw);
   } catch {
@@ -33,7 +33,7 @@ function getBoardData(): BoardData {
 
 function getRunsData(): RunsData {
   try {
-    const runsPath = join(process.cwd(), "..", "board", "runs.json");
+    const runsPath = join(process.cwd(), "data", "runs.json");
     const raw = readFileSync(runsPath, "utf-8");
     return JSON.parse(raw);
   } catch {

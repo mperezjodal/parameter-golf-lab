@@ -1,0 +1,134 @@
+{
+  "schema": "runs-v1",
+  "description": "Run ledger for agent sessions in Parameter Golf Lab. Each entry records one agent invocation — prompt, status, progress, outcome, and evidence. Retrospective entries are reconstructed from git history and are marked accordingly.",
+  "runs": [
+    {
+      "id": "RUN-001",
+      "agent": "claude-sonnet-4-6",
+      "cardIds": [
+        "CARD-001"
+      ],
+      "status": "done",
+      "startedAt": "2026-03-18T23:00:00-03:00",
+      "updatedAt": "2026-03-18T23:00:52-03:00",
+      "finishedAt": "2026-03-18T23:00:52-03:00",
+      "prompt": "Initialize this repo as a research coordination hub for the OpenAI Parameter Golf Challenge (16 MB artifact / 10 min 8×H100). Scaffold the directory structure: docs/, agents/, experiments/, ideas/, orchestration/, board/, dashboard/. Create README.md with project overview. Create a Next.js dashboard with a Kanban board component reading board/backlog.json. Seed the backlog with initial cards. Keep everything public-safe.",
+      "promptSource": "reconstructed",
+      "currentTask": null,
+      "summary": "Scaffolded the full repo: README, docs structure, agents/templates, board/backlog.json with initial cards, and a Next.js 16 dashboard with TailwindCSS and a KanbanBoard component. Created SYMPHONY.md design note for coordination layer.",
+      "result": "success",
+      "evidence": [
+        "commit:49f0b65"
+      ],
+      "files": [
+        "README.md",
+        "SYMPHONY.md",
+        ".gitignore",
+        "board/backlog.json",
+        "docs/charter.md",
+        "docs/glossary.md",
+        "docs/repo-watch.md",
+        "docs/safety-rules.md",
+        "agents/task-taxonomy.md",
+        "agents/templates/experiment-runner.md",
+        "experiments/index.md",
+        "ideas/index.md",
+        "orchestration/index.md",
+        "dashboard/app/page.tsx",
+        "dashboard/app/layout.tsx",
+        "dashboard/components/KanbanBoard.tsx",
+        "dashboard/app/api/board/route.ts"
+      ],
+      "retrospective": true
+    },
+    {
+      "id": "RUN-002",
+      "agent": "claude-sonnet-4-6",
+      "cardIds": [
+        "CARD-004",
+        "CARD-007"
+      ],
+      "status": "done",
+      "startedAt": "2026-03-19T03:00:00-03:00",
+      "updatedAt": "2026-03-19T03:02:14-03:00",
+      "finishedAt": "2026-03-19T03:02:14-03:00",
+      "prompt": "Do two things: (1) Write a sizing analysis doc at docs/sizing-16mb.md calculating how many parameters fit in 16 MB at FP32, FP16/BF16, INT8, INT4 — factor in the vocabulary embedding table, which is the dominant cost at small hidden dims. (2) Review ideas/index.md and score all hypotheses on expected impact vs uncertainty, producing a ranked memo at ideas/ranked.md. Identify the top 3 ideas to pursue first.",
+      "promptSource": "reconstructed",
+      "currentTask": null,
+      "summary": "Produced docs/sizing-16mb.md with full parameter budget tables across precision levels. Key finding: 32K vocab at D=512 alone exceeds 16 MB — vocabulary is the critical constraint. Recommended BF16 baseline: V=4096, D=256, L=9, ~8.1M params. Also produced ideas/ranked.md ranking 5 hypotheses: (1) small vocab + weight tying (mandatory), (2) INT8 (doubles budget if accepted), (3) depth/width ratio, (4) SSM/Mamba, (5) distillation.",
+      "result": "success",
+      "evidence": [
+        "commit:e6d116d",
+        "file:docs/sizing-16mb.md",
+        "file:ideas/ranked.md"
+      ],
+      "files": [
+        "docs/sizing-16mb.md",
+        "ideas/ranked.md",
+        "board/backlog.json"
+      ],
+      "retrospective": true
+    },
+    {
+      "id": "RUN-003",
+      "agent": "claude-sonnet-4-6",
+      "cardIds": [
+        "CARD-002",
+        "CARD-003",
+        "CARD-011",
+        "CARD-012",
+        "CARD-013",
+        "CARD-014",
+        "CARD-015",
+        "CARD-016"
+      ],
+      "status": "done",
+      "startedAt": "2026-03-19T03:03:00-03:00",
+      "updatedAt": "2026-03-19T03:04:06-03:00",
+      "finishedAt": "2026-03-19T03:04:06-03:00",
+      "prompt": "Record that the Vercel deployment is live and the GitHub repo is now public. Update board cards for CARD-002 and CARD-003 with evidence links. Add a batch of new backlog cards for upstream monitoring (CARD-011 through CARD-014), the INT8 verification blocker (CARD-015), and the baseline design spec task (CARD-016). Update .gitignore as needed.",
+      "promptSource": "reconstructed",
+      "currentTask": null,
+      "summary": "Updated board/backlog.json with evidence fields on CARD-002 (Vercel live) and CARD-003 (GitHub public). Added CARD-011–CARD-016 covering upstream monitoring, INT8 verification blocker, and baseline design spec. Updated .gitignore. Board now has 16 cards.",
+      "result": "success",
+      "evidence": [
+        "commit:f1530fa",
+        "url:https://dashboard-nine-blush-81.vercel.app",
+        "url:https://github.com/mperezjodal/parameter-golf-lab"
+      ],
+      "files": [
+        "board/backlog.json",
+        "board/upstream-log.md",
+        ".gitignore"
+      ],
+      "retrospective": true
+    },
+    {
+      "id": "RUN-004",
+      "agent": "claude-sonnet-4-6",
+      "cardIds": [],
+      "status": "done",
+      "startedAt": "2026-03-19T12:00:00-03:00",
+      "updatedAt": "2026-03-19T11:26:01.079Z",
+      "finishedAt": "2026-03-19T11:26:01.079Z",
+      "prompt": "Build a robust, public-safe, local-file-backed run observability system for the Parameter Golf Lab dashboard. Deliverables: (1) a run ledger file board/runs.json with clear schema and seeded retrospective entries from known completed work; (2) dashboard UI section showing active/recent runs with status badges, prompt preview (expand/collapse), progress, result summary, and evidence links; (3) helper scripts under scripts/ to create/update/finish run records; (4) docs/observability.md explaining the model; (5) keep mobile-friendly, don't break the board view.",
+      "promptSource": "exact",
+      "currentTask": null,
+      "summary": "Implemented full run observability: board/runs.json ledger (runs-v1 schema, 4 seeded entries), RunsPanel dashboard component with status badges/prompt expand/evidence links, /api/runs endpoint, scripts/run.js CLI (create/update/finish/list/show), and docs/observability.md. Build passes clean.",
+      "result": "success",
+      "evidence": [
+        "file:board/runs.json",
+        "file:docs/observability.md"
+      ],
+      "files": [
+        "board/runs.json",
+        "dashboard/components/RunsPanel.tsx",
+        "dashboard/app/page.tsx",
+        "dashboard/app/api/runs/route.ts",
+        "scripts/run.js",
+        "docs/observability.md"
+      ],
+      "retrospective": false
+    }
+  ]
+}
