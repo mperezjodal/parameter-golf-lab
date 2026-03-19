@@ -17,3 +17,6 @@ dashboard/out/
 
 # Experiment artifacts (raw outputs — too large for git)
 experiments/*/results/raw.jsonl
+
+# Vercel
+.vercel

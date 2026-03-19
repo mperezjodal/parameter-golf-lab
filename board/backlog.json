@@ -14,19 +14,21 @@
       "id": "CARD-002",
       "title": "Vercel deploy readiness",
       "description": "Verify dashboard builds cleanly. Connect to Vercel project. Set root directory to dashboard/. Test preview deploy.",
-      "column": "backlog",
+      "column": "done",
       "labels": ["infra", "deploy"],
       "created": "2026-03-18",
-      "priority": "high"
+      "priority": "high",
+      "evidence": "Deployed 2026-03-19. Live at https://dashboard-nine-blush-81.vercel.app — Next.js 16 build passes, all 5 pages generated statically, /api/board dynamic route present."
     },
     {
       "id": "CARD-003",
       "title": "GitHub public push readiness",
       "description": "Audit repo for secrets. Confirm .gitignore covers .env.local. Create remote. Push. Set visibility to public.",
-      "column": "backlog",
+      "column": "done",
       "labels": ["infra", "public"],
       "created": "2026-03-18",
-      "priority": "high"
+      "priority": "high",
+      "evidence": "Pushed 2026-03-19. Public repo: https://github.com/mperezjodal/parameter-golf-lab — no secrets found, .gitignore covers .env*, node_modules, .next, .vercel."
     },
     {
       "id": "CARD-004",

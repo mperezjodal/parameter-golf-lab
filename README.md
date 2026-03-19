@@ -59,10 +59,10 @@ every training second must earn its place.
 - [x] Board seeded with challenge-aligned cards
 - [x] First architecture sizing calculation (CARD-004) → `docs/sizing-16mb.md`
 - [x] First hypothesis ranking (CARD-007) → `ideas/ranked.md`
+- [x] GitHub public repo: <https://github.com/mperezjodal/parameter-golf-lab> (CARD-003)
+- [x] Dashboard live on Vercel: <https://dashboard-nine-blush-81.vercel.app> (CARD-002)
 - [ ] Verify INT8 artifact acceptance (CARD-015) — **blocking**
 - [ ] Baseline experiment spec: V=4096 D=256 L=9 BF16 (CARD-016)
-- [ ] Vercel deploy (CARD-002)
-- [ ] GitHub public push (CARD-003)
 
 ---
 
