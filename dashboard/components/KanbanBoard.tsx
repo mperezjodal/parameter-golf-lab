@@ -8,6 +8,7 @@ interface Card {
   labels: string[];
   created: string;
   priority: "high" | "medium" | "low";
+  evidence?: string;
 }
 
 interface BoardData {
@@ -33,8 +34,13 @@ const LABEL_COLOR: Record<string, string> = {
   dev: "bg-slate-100 text-slate-700",
   dashboard: "bg-cyan-100 text-cyan-700",
   ideas: "bg-amber-100 text-amber-700",
-  tracking: "bg-lime-100 text-lime-700",
-  agents: "bg-emerald-100 text-emerald-700",
+  sizing: "bg-lime-100 text-lime-700",
+  architecture: "bg-emerald-100 text-emerald-700",
+  training: "bg-rose-100 text-rose-700",
+  distillation: "bg-fuchsia-100 text-fuchsia-700",
+  data: "bg-yellow-100 text-yellow-700",
+  upstream: "bg-blue-100 text-blue-800",
+  monitoring: "bg-gray-100 text-gray-700",
 };
 
 const COLUMN_LABEL: Record<string, string> = {
@@ -68,7 +74,7 @@ export default function KanbanBoard({ board }: { board: BoardData }) {
             </p>
           </div>
           <span className="text-xs text-zinc-400 font-mono">
-            OpenAI Parameter Golf
+            16 MB · 10 min · 8×H100
           </span>
         </div>
       </header>
@@ -130,6 +136,11 @@ export default function KanbanBoard({ board }: { board: BoardData }) {
                           </span>
                         ))}
                       </div>
+                      {card.evidence && (
+                        <p className="text-xs text-zinc-400 italic mt-2 border-t border-zinc-100 dark:border-zinc-800 pt-2">
+                          {card.evidence}
+                        </p>
+                      )}
                       <p className="text-xs text-zinc-400 mt-2">{card.created}</p>
                     </div>
                   ))}

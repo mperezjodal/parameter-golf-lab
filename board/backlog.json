@@ -3,8 +3,8 @@
   "cards": [
     {
       "id": "CARD-001",
-      "title": "Repo setup & scaffold",
-      "description": "Initialize repo structure, README, docs, dashboard skeleton.",
+      "title": "Repo reframe & scaffold",
+      "description": "Initialize repo structure, README, docs, dashboard skeleton aligned with the OpenAI Parameter Golf Challenge (16 MB artifact / 10 min 8xH100).",
       "column": "done",
       "labels": ["setup"],
       "created": "2026-03-18",
@@ -22,7 +22,7 @@
     {
       "id": "CARD-003",
       "title": "GitHub public push readiness",
-      "description": "Audit repo for secrets. Add .gitignore entries for .env.local. Create remote. Push. Set visibility to public.",
+      "description": "Audit repo for secrets. Confirm .gitignore covers .env.local. Create remote. Push. Set visibility to public.",
       "column": "backlog",
       "labels": ["infra", "public"],
       "created": "2026-03-18",
@@ -30,66 +30,127 @@
     },
     {
       "id": "CARD-004",
-      "title": "First experiment design: temperature per task type",
-      "description": "Based on IDEA-001. Design a parameter grid for temperature (0, 0.3, 0.7, 1.0, 1.5) across 3 task types (code, creative, extraction). Define rubric.",
-      "column": "backlog",
-      "labels": ["experiment", "ideas"],
+      "title": "Architecture sizing: parameter budget at 16 MB",
+      "description": "Calculate how many parameters fit in 16 MB at FP32, FP16, BF16, INT8. Factor in embedding table (vocab size × hidden dim). Produce a sizing table in docs/.",
+      "column": "done",
+      "labels": ["architecture", "sizing"],
       "created": "2026-03-18",
-      "priority": "medium"
+      "priority": "high",
+      "evidence": "Sizing doc produced at docs/sizing-16mb.md (2026-03-19). Key findings: FP16/BF16 ≈ 8.4M params; INT8 ≈ 16.8M. Vocabulary is the critical budget sink — 32K vocab at D=512 alone exceeds 16 MB. Recommended baseline: V=4096, D=256, L=9, BF16, weight-tied embedding."
     },
     {
       "id": "CARD-005",
-      "title": "Symphony research: existing tools",
-      "description": "Research whether Optuna, Ray Tune, or similar tools could serve as Symphony's optimization backend. Document findings in docs/.",
+      "title": "Literature scan: tiny LM architecture results",
+      "description": "Survey papers on sub-100M parameter language models (GPT-2 small, Mamba, RWKV, etc.). What architectures achieve best perplexity per parameter? Document in ideas/.",
       "column": "backlog",
-      "labels": ["research", "symphony"],
+      "labels": ["research", "architecture"],
       "created": "2026-03-18",
-      "priority": "medium"
+      "priority": "high"
     },
     {
       "id": "CARD-006",
-      "title": "OpenAI accepted PR scan",
-      "description": "Scan OpenAI API changelog and public PRs (openai-python, openai-node) for parameter-related changes. Document findings in ideas/.",
+      "title": "Baseline design: transformer at 16 MB FP16",
+      "description": "Sketch a standard transformer architecture that fits in 16 MB at FP16. Choose depth, hidden dim, heads, MLP ratio. Estimate compute needed for 10 min training.",
       "column": "backlog",
-      "labels": ["research", "tracking"],
-      "created": "2026-03-18",
-      "priority": "low"
-    },
-    {
-      "id": "CARD-007",
-      "title": "Idea ranking: prioritize top 3 for first experiments",
-      "description": "Review /ideas/index.md. Score all ideas. Move top 3 to experiment design phase.",
-      "column": "backlog",
-      "labels": ["planning", "ideas"],
+      "labels": ["architecture", "experiment"],
       "created": "2026-03-18",
       "priority": "medium"
     },
     {
+      "id": "CARD-007",
+      "title": "Hypothesis ranking: top 3 for first design experiments",
+      "description": "Review /ideas/index.md. Score all ideas on expected impact vs uncertainty. Move top 3 to experiment design. Write ideas/ranked.md.",
+      "column": "done",
+      "labels": ["planning", "ideas"],
+      "created": "2026-03-18",
+      "priority": "medium",
+      "evidence": "Ranked memo produced at ideas/ranked.md (2026-03-19). Top 3: (1) Small vocab + weight tying — mandatory precondition, not optional; (2) INT8 quantization — doubles param budget if challenge accepts it; (3) Depth/width ratio — deeper+narrower wins at small scale, D=256 L=9 baseline recommended."
+    },
+    {
       "id": "CARD-008",
-      "title": "Build experiment runner script (T1)",
-      "description": "Implement agents/run.js for T1 (Experiment Runner). Must include cost guard. Read design from design.md, write to results/.",
+      "title": "Alternative design: SSM/Mamba at 16 MB",
+      "description": "Sketch a Mamba or S4-based architecture that fits in 16 MB. Compare parameter efficiency vs transformer baseline. Is SSM more efficient at this scale?",
       "column": "backlog",
-      "labels": ["dev", "agents"],
+      "labels": ["architecture", "research"],
       "created": "2026-03-18",
       "priority": "medium"
     },
     {
       "id": "CARD-009",
-      "title": "Dashboard: connect to live board data",
-      "description": "Dashboard currently shows static data. Wire up /api/board route to read board/backlog.json. Reflect real card state.",
+      "title": "Quantization: INT8 artifact size reduction",
+      "description": "Research post-training quantization (PTQ) to reduce artifact from FP16 to INT8. Does 2x size reduction trade off acceptably against quality? Document findings.",
       "column": "backlog",
-      "labels": ["dev", "dashboard"],
+      "labels": ["research", "sizing"],
       "created": "2026-03-18",
       "priority": "medium"
     },
     {
       "id": "CARD-010",
-      "title": "Symphony: decide Hypothesis A vs B vs C",
-      "description": "Review SYMPHONY.md hypotheses. Make a call on which to prototype first. Write decision to docs/symphony-decision.md.",
+      "title": "Symphony: prototype board-driven advisor (Hypothesis B)",
+      "description": "Implement a one-shot script that reads experiments/*/findings.md and writes new hypothesis cards to board/backlog.json. Human reviews before any card moves.",
       "column": "backlog",
-      "labels": ["symphony", "planning"],
+      "labels": ["symphony", "dev"],
       "created": "2026-03-18",
       "priority": "low"
+    },
+    {
+      "id": "CARD-011",
+      "title": "Upstream repo watch: track commits & new PRs",
+      "description": "Periodically inspect the upstream OpenAI Parameter Golf repo for new commits, opened PRs, and merged changes. Record findings in board/upstream-log.md following the protocol in docs/repo-watch.md.",
+      "column": "backlog",
+      "labels": ["upstream", "monitoring"],
+      "created": "2026-03-19",
+      "priority": "high",
+      "evidence": "See board/upstream-log.md for running findings log."
+    },
+    {
+      "id": "CARD-012",
+      "title": "Accepted PR scanner: log notable merged submissions",
+      "description": "After each upstream repo inspection, scan merged PRs for novel techniques (architecture choices, quantization tricks, data strategies). Summarize in board/upstream-log.md under 'Accepted PRs'.",
+      "column": "backlog",
+      "labels": ["upstream", "monitoring", "research"],
+      "created": "2026-03-19",
+      "priority": "high",
+      "evidence": "No accepted PRs logged yet. First pass: 2026-03-19."
+    },
+    {
+      "id": "CARD-013",
+      "title": "Leaderboard log: record notable public scores",
+      "description": "Maintain a running leaderboard section in board/upstream-log.md. Track any publicly reported evaluation scores or benchmark results from accepted submissions.",
+      "column": "backlog",
+      "labels": ["upstream", "monitoring"],
+      "created": "2026-03-19",
+      "priority": "medium",
+      "evidence": "No public scores recorded yet."
+    },
+    {
+      "id": "CARD-014",
+      "title": "Community signals: scan discussions & issues",
+      "description": "Monitor upstream repo issues/discussions and any linked community threads for emerging techniques, reported gotchas, or dataset/eval surprises. Log key signals in upstream-log.md.",
+      "column": "backlog",
+      "labels": ["upstream", "monitoring", "research"],
+      "created": "2026-03-19",
+      "priority": "medium"
+    },
+    {
+      "id": "CARD-015",
+      "title": "Verify: does challenge accept INT8 artifacts?",
+      "description": "Check challenge rules and any upstream repo documentation to confirm whether INT8-quantized model files are accepted as submissions. This is the single highest-stakes open question: a yes doubles the effective parameter budget from ~8.4M to ~16.8M. Log answer in docs/sizing-16mb.md under open questions.",
+      "column": "backlog",
+      "labels": ["rules", "sizing", "blocking"],
+      "created": "2026-03-19",
+      "priority": "high",
+      "evidence": "Surfaced by sizing analysis in docs/sizing-16mb.md. INT8 = 2× param budget. Must verify before committing to BF16-only baseline design."
+    },
+    {
+      "id": "CARD-016",
+      "title": "Baseline design: V=4096 D=256 L=9 BF16 transformer",
+      "description": "Write a concrete architecture spec for the recommended BF16 baseline: V=4096 BPE vocab, D=256 hidden dim, 9 transformer layers, weight-tied embedding, MLP ratio 4. Include: estimated params (~8.1M), estimated artifact size (~16.2 MB), head count, estimated training throughput on 8xH100, and any open hyper-parameter choices. Store in experiments/EXP-001/spec.md.",
+      "column": "backlog",
+      "labels": ["architecture", "experiment", "baseline"],
+      "created": "2026-03-19",
+      "priority": "high",
+      "evidence": "Sizing analysis (docs/sizing-16mb.md) identifies this as the lowest-risk BF16 starting point. Unblocks all downstream experiments."
     }
   ]
 }

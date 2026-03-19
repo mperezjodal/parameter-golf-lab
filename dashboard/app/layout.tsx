@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Parameter Golf Lab",
-  description: "OpenAI Parameter Golf — coordination board and results",
+  description:
+    "OpenAI Parameter Golf Challenge — 16 MB model / 10 min 8×H100. Research coordination board.",
 };
 
 export default function RootLayout({

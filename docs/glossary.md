@@ -1,21 +1,45 @@
 # Glossary
 
-**Parameter Golf** — finding the minimal, most effective parameter configuration for a target behavior. Fewer, simpler parameters = lower "score."
+**Parameter Golf** — the OpenAI challenge: train the highest-scoring model
+possible within a 16 MB artifact budget and 10-minute compute window on 8×H100
+GPUs. "Golf" = fewer parameters, better score.
 
-**Temperature** — controls randomness. 0 = deterministic (greedy decoding), 2 = very random. Rule of thumb: low for extraction/code, higher for creative tasks.
+**Artifact size** — the size of the final submitted model weights on disk.
+At FP32, 1M parameters ≈ 4 MB. At FP16/BF16, ≈ 2 MB. At INT8, ≈ 1 MB.
 
-**Top-p (Nucleus Sampling)** — considers only the top P% probability mass tokens at each step. Usually leave at 1.0 unless combining with temperature tuning.
+**Parameter budget** — the maximum number of model parameters that fit in 16 MB
+at a given precision. Example: 16 MB / 2 bytes = 8M params at FP16.
 
-**Presence Penalty** — positive values penalize any token that has appeared at all in the output so far. Good for reducing repetition in long outputs.
+**Architecture** — the structural design of the model: number of layers, hidden
+dimension, number of attention heads, MLP expansion ratio, etc.
 
-**Frequency Penalty** — positive values penalize tokens proportional to how many times they've appeared. More aggressive than presence penalty for very repeated tokens.
+**Transformer** — attention-based sequence model; the dominant architecture for
+language modeling. Scales predictably but may be suboptimal at very small sizes.
 
-**Seed** — integer seed for reproducibility. Same seed + same parameters = same output (model-side determinism, not guaranteed across API versions).
+**SSM (State Space Model)** — alternative to transformers (e.g., Mamba, S4).
+May be more parameter-efficient at small scale. Worth benchmarking.
 
-**Logit Bias** — map of token IDs to bias values (-100 to 100). -100 effectively bans a token; 100 forces it. Powerful but requires tokenizer knowledge.
+**Quantization** — reducing weight numerical precision (e.g., FP32→INT8) to
+shrink artifact size without retraining. Can halve or quarter artifact size.
 
-**Symphony** — working name for a proposed meta-coordination layer. See `SYMPHONY.md`.
+**Distillation** — training a small model to mimic the outputs of a larger
+teacher model. Can improve quality within a fixed parameter budget.
+
+**BPE (Byte-Pair Encoding)** — common tokenization algorithm. Larger vocab =
+larger embedding table = more artifact bytes consumed on vocabulary alone.
+
+**Perplexity** — primary language model quality metric. Lower = better. Measures
+how surprised the model is by held-out text.
+
+**TFLOP/s** — teraFLOPs per second. Used to estimate training throughput and
+check whether experiments fit within the 10-minute compute budget.
+
+**Symphony** — working name for the research coordination layer. See `SYMPHONY.md`.
 
 **Backlog** — unstarted cards in the Kanban board (`board/backlog.json`).
 
-**Experiment** — a structured test design in `/experiments/` with a hypothesis, parameter grid, and recorded results.
+**Result card** — a `findings.md` file produced after each completed experiment.
+Describes what was tried, what was learned, and what to try next.
+
+**Hypothesis** — a falsifiable claim about the architecture or training space.
+Tracked in `/ideas/index.md` until promoted to a full experiment.

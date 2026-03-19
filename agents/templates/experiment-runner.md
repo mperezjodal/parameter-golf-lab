@@ -1,8 +1,19 @@
-# Agent Template: Experiment Runner (T1)
+# Agent Template: Architecture Sizer (T1)
 
-**Type:** One-shot script agent
+**Type:** One-shot script agent (no GPU, no API calls — pure arithmetic)
 **Trigger:** Manual (`node agents/run.js --task T1 --experiment EXP-XXX`)
-**Safety:** Reads design.md, calls OpenAI API, writes results. No side effects beyond files.
+**Safety:** Reads design.md, computes sizing, writes results. No network calls,
+no API keys needed.
+
+---
+
+## Purpose
+
+Given an architecture specification, compute:
+1. Total parameter count
+2. Artifact size at each precision
+3. Estimated training FLOP cost
+4. Whether the design fits within challenge constraints
 
 ---
 
@@ -10,37 +21,49 @@
 
 ```
 1. Read /experiments/EXP-XXX/design.md
-2. Parse parameter grid (list of {temperature, top_p, ...} combos)
-3. Parse task inputs from /experiments/EXP-XXX/inputs/
-4. For each parameter combo × each input:
-   a. Call OpenAI API with that config
-   b. Append result to results/raw.jsonl
-5. Compute summary stats (variance, avg cost, latency)
-6. Write results/summary.json
-7. Print completion message
-8. HALT
+2. Parse architecture spec:
+   - vocab_size, hidden_dim, num_layers, num_heads, mlp_expansion
+   - precision: fp32 | fp16 | bf16 | int8
+3. Compute parameter count:
+   - embedding: vocab_size × hidden_dim
+   - per layer: attention (4 × hidden_dim²) + MLP (2 × hidden_dim × mlp_dim)
+   - total = embedding + num_layers × per_layer + lm_head
+4. Compute artifact size:
+   - fp32: total_params × 4 bytes
+   - fp16/bf16: total_params × 2 bytes
+   - int8: total_params × 1 byte
+5. Check: artifact_size ≤ 16 MB? Flag if over.
+6. Estimate training FLOPs: 6 × total_params × training_tokens
+7. Check: estimated_flops ≤ budget (8 × H100 × 10 min × ~80 TFLOP/s)?
+8. Write results/sizing.json
+9. Print sizing summary to stdout
+10. HALT
 ```
 
-## Cost Guard
-
-Before starting any API calls, estimate total cost:
-```
-estimated_cost = num_combos × num_inputs × avg_tokens × price_per_token
-```
-If estimated_cost > $0.50, print warning and require `--confirm-cost` flag to proceed.
+---
 
 ## Output Schema
 
-`results/raw.jsonl` — one JSON object per line:
+`results/sizing.json`:
 ```json
 {
   "experiment_id": "EXP-001",
-  "run_id": "run_001",
-  "params": { "temperature": 0.7, "top_p": 1.0 },
-  "input_id": "input_001",
-  "output": "...",
-  "usage": { "prompt_tokens": 45, "completion_tokens": 120 },
-  "latency_ms": 832,
+  "architecture": {
+    "vocab_size": 32000,
+    "hidden_dim": 512,
+    "num_layers": 6,
+    "num_heads": 8,
+    "mlp_expansion": 4
+  },
+  "total_params": 4194304,
+  "artifact_size_bytes": {
+    "fp32": 16777216,
+    "fp16": 8388608,
+    "int8": 4194304
+  },
+  "fits_16mb": { "fp32": true, "fp16": true, "int8": true },
+  "estimated_training_flops": "2.5e18",
+  "fits_compute_budget": true,
   "timestamp": "2026-03-18T00:00:00Z"
 }
 ```

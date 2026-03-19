@@ -2,22 +2,29 @@
 
 ## Hard Rules (never break)
 
-1. **No secrets in git.** `.env.local` is gitignored. If you need an API key, add it to `.env.local` and document the variable name (not the value) here.
-2. **No autonomous loops.** Nothing in this repo starts itself. Agent templates are inert documents.
-3. **No personal data.** All prompts, inputs, and outputs in experiments use synthetic or public-domain content.
-4. **No private benchmarks.** Only publish results from public or self-created evaluation tasks.
+1. **No secrets in git.** `.env.local` is gitignored. Document variable names
+   here but never values.
+2. **No training runs in this repo.** All GPU-intensive work happens on external
+   hardware. This repo holds designs and findings only.
+3. **No autonomous loops.** Nothing in this repo starts itself. Agent templates
+   are inert documents — humans trigger them.
+4. **No personal data.** All content uses synthetic or public-domain material.
+5. **No private benchmarks.** Only publish results from public or self-created
+   evaluation tasks.
 
 ## Soft Rules (use judgment)
 
-5. **Prefer cheap models.** Use `gpt-4o-mini` or equivalent for parameter grid sweeps. Reserve expensive models for final validation.
-6. **Cap experiment budgets.** Default max spend per experiment: $0.50 USD. Needs explicit override comment if exceeded.
-7. **No Docker.** Keep local setup to `npm install` and `node`.
-8. **No databases.** State lives in JSON files in `/board/` and `/experiments/`. This keeps the repo portable and auditable.
+6. **No Docker.** Local setup is `npm install` and `node` only.
+7. **No databases.** State lives in JSON files in `/board/` and `/experiments/`.
+   Portable and fully auditable.
+8. **Estimate before running.** Any sizing calculation should include a parameter
+   count and projected artifact size before committing to a design.
 
-## Required Environment Variables
+## Environment Variables (if any local tooling is added)
 
 | Variable | Purpose | Where to get it |
 |---|---|---|
-| `OPENAI_API_KEY` | OpenAI API calls | platform.openai.com |
+| *(none required for dashboard)* | — | — |
 
-Add to `.env.local` (never commit).
+If any local scripting tools are added later, document their required variables
+here. Never commit values.

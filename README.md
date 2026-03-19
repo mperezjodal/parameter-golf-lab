@@ -1,65 +1,106 @@
 # Parameter Golf Lab
 
-**OpenAI Parameter Golf** — a public-safe coordination repository for systematic exploration of how model parameters (temperature, top_p, presence_penalty, frequency_penalty, max_tokens, stop sequences, and more) affect LLM output quality, cost, and behavior.
+Coordination repository for the **OpenAI Parameter Golf Challenge** — train the
+best possible language model within a **16 MB artifact budget** and a **10-minute
+compute window on 8×H100 GPUs**.
 
-## Charter
+This repo is a **public-safe, low-resource research coordination hub**: no
+training happens here, no secrets live here, and no autonomous loops run inside
+it. Everything is human-driven via a Kanban board and one-shot agent tasks.
 
-This repo is the center of knowledge, ideas, documentation, coordination, and results for Parameter Golf research. The goal: find minimal, precise parameter configurations that produce target behaviors reliably and cheaply.
+---
 
-**What we do here:**
-- Catalog parameter interaction hypotheses
-- Design lightweight, reproducible experiments
-- Collect and compare results
-- Coordinate via Kanban board (see `/board/`)
-- Document findings in `/docs/`
+## The Challenge
 
-**What we explicitly do NOT do here:**
-- Run autonomous recurring agents from inside this repo
-- Run training or fine-tuning jobs
-- Spend money on expensive cloud experiments
-- Store secrets, API keys, or personal data
-- Start any internal loops that execute without human approval
+| Constraint | Value |
+|---|---|
+| **Artifact size limit** | 16 MB (submitted model weights, post-quantization) |
+| **Compute budget** | 10 minutes on 8×H100 GPUs |
+| **Goal** | Maximize benchmark score within both limits |
+
+"Golf" = fewer parameters, same (or better) performance. Every kilobyte and
+every training second must earn its place.
+
+---
+
+## What we do here
+
+- Catalog architecture hypotheses and rank them by expected impact
+- Estimate parameter budgets and sizing trade-offs (no GPU needed for math)
+- Design experiment plans — run elsewhere, results logged back here
+- Track findings on a Kanban board using Symphony-style isolated result cards
+- Coordinate ideas using an AutoResearch-inspired systematic backlog
+
+## What we do NOT do here
+
+- **No training runs** — too compute-intensive; must happen on appropriate hardware
+- **No autonomous loops** — agent templates are inert documents humans trigger
+- **No cloud credentials or secrets** in git, ever
+- **No paid APIs** called directly from this repo
+- **No personal or proprietary data**
+
+---
 
 ## Safety & Resource Rules
 
-1. **No secrets.** API keys live in `.env.local` (gitignored). Never commit them.
-2. **No autonomous loops.** Agent templates in `/agents/` are templates only — humans trigger runs manually.
-3. **No expensive calls.** Prefer `gpt-4o-mini` or equivalent cheap models for exploration. Gate expensive models behind explicit human sign-off.
-4. **No personal data.** All experiment inputs are synthetic or public domain.
-5. **Low local resource usage.** Dashboard is a static/SSR Next.js app. No background workers, no databases, no Docker.
-6. **Public-safe.** Everything committed here is safe to make public. No proprietary prompts, no private benchmarks.
+1. **No secrets in git** — `.env.local` is gitignored; document variable names only
+2. **No autonomous loops** — humans trigger every agent task
+3. **No expensive calls** — sizing calculations and literature search are free
+4. **No personal data** — all content is public-domain or synthetic
+5. **Low local resource usage** — dashboard is a Next.js app with no background workers
+6. **Public-safe** — every committed file is safe for a public GitHub repo
 
-## Current State (2026-03-18)
+---
 
-- [x] Repo scaffolded
-- [x] Dashboard (Next.js, Vercel-ready)
-- [x] Board backlog seeded with initial cards
-- [x] Symphony note drafted
-- [ ] First experiment designed
-- [ ] Vercel deploy configured
-- [ ] GitHub remote created
+## Current state
 
-## Structure
+- [x] Repo scaffolded: board, docs, agents, experiments, ideas, orchestration
+- [x] Dashboard ready (Next.js Kanban board)
+- [x] Board seeded with challenge-aligned cards
+- [x] First architecture sizing calculation (CARD-004) → `docs/sizing-16mb.md`
+- [x] First hypothesis ranking (CARD-007) → `ideas/ranked.md`
+- [ ] Verify INT8 artifact acceptance (CARD-015) — **blocking**
+- [ ] Baseline experiment spec: V=4096 D=256 L=9 BF16 (CARD-016)
+- [ ] Vercel deploy (CARD-002)
+- [ ] GitHub public push (CARD-003)
+
+---
+
+## Directory layout
 
 ```
 parameter-golf-lab/
-├── README.md               ← you are here
-├── SYMPHONY.md             ← speculative integration note
-├── docs/                   ← reference docs, findings, glossary
-├── ideas/                  ← raw ideas, not yet committed to experiments
-├── experiments/            ← structured experiment designs + results
-├── agents/                 ← agent templates and task taxonomy (not running)
-├── orchestration/          ← coordination patterns, multi-agent sketches
-├── board/                  ← Kanban cards (JSON) consumed by dashboard
-└── dashboard/              ← Next.js PWA dashboard (Vercel-ready)
+├── README.md              ← this file
+├── SYMPHONY.md            ← coordination layer design (Elixir-inspired)
+├── board/
+│   └── backlog.json       ← Kanban board state (consumed by dashboard)
+├── docs/
+│   ├── charter.md         ← mission and challenge scope
+│   ├── glossary.md        ← terminology
+│   └── safety-rules.md    ← hard constraints
+├── agents/
+│   ├── task-taxonomy.md   ← agent task types (T1–T5)
+│   └── templates/         ← per-task prompt templates
+├── experiments/
+│   ├── index.md           ← experiment registry
+│   └── EXP-XXX/           ← per-experiment folder
+├── ideas/
+│   └── index.md           ← architecture hypothesis backlog
+├── orchestration/
+│   └── index.md           ← coordination patterns
+└── dashboard/             ← Next.js board + result cards UI
 ```
+
+---
 
 ## Dashboard
 
 ```bash
 cd dashboard
 npm install
-npm run dev   # http://localhost:3000
+npm run dev
+# open http://localhost:3000
 ```
 
-Deploy to Vercel: connect repo root, set `Root Directory` to `dashboard/`.
+Reads `board/backlog.json` and renders a live Kanban board. No backend required.
+Vercel-deployable: connect repo root, set Root Directory to `dashboard/`.
