@@ -1,0 +1,95 @@
+{
+  "columns": ["backlog", "in-progress", "review", "done"],
+  "cards": [
+    {
+      "id": "CARD-001",
+      "title": "Repo setup & scaffold",
+      "description": "Initialize repo structure, README, docs, dashboard skeleton.",
+      "column": "done",
+      "labels": ["setup"],
+      "created": "2026-03-18",
+      "priority": "high"
+    },
+    {
+      "id": "CARD-002",
+      "title": "Vercel deploy readiness",
+      "description": "Verify dashboard builds cleanly. Connect to Vercel project. Set root directory to dashboard/. Test preview deploy.",
+      "column": "backlog",
+      "labels": ["infra", "deploy"],
+      "created": "2026-03-18",
+      "priority": "high"
+    },
+    {
+      "id": "CARD-003",
+      "title": "GitHub public push readiness",
+      "description": "Audit repo for secrets. Add .gitignore entries for .env.local. Create remote. Push. Set visibility to public.",
+      "column": "backlog",
+      "labels": ["infra", "public"],
+      "created": "2026-03-18",
+      "priority": "high"
+    },
+    {
+      "id": "CARD-004",
+      "title": "First experiment design: temperature per task type",
+      "description": "Based on IDEA-001. Design a parameter grid for temperature (0, 0.3, 0.7, 1.0, 1.5) across 3 task types (code, creative, extraction). Define rubric.",
+      "column": "backlog",
+      "labels": ["experiment", "ideas"],
+      "created": "2026-03-18",
+      "priority": "medium"
+    },
+    {
+      "id": "CARD-005",
+      "title": "Symphony research: existing tools",
+      "description": "Research whether Optuna, Ray Tune, or similar tools could serve as Symphony's optimization backend. Document findings in docs/.",
+      "column": "backlog",
+      "labels": ["research", "symphony"],
+      "created": "2026-03-18",
+      "priority": "medium"
+    },
+    {
+      "id": "CARD-006",
+      "title": "OpenAI accepted PR scan",
+      "description": "Scan OpenAI API changelog and public PRs (openai-python, openai-node) for parameter-related changes. Document findings in ideas/.",
+      "column": "backlog",
+      "labels": ["research", "tracking"],
+      "created": "2026-03-18",
+      "priority": "low"
+    },
+    {
+      "id": "CARD-007",
+      "title": "Idea ranking: prioritize top 3 for first experiments",
+      "description": "Review /ideas/index.md. Score all ideas. Move top 3 to experiment design phase.",
+      "column": "backlog",
+      "labels": ["planning", "ideas"],
+      "created": "2026-03-18",
+      "priority": "medium"
+    },
+    {
+      "id": "CARD-008",
+      "title": "Build experiment runner script (T1)",
+      "description": "Implement agents/run.js for T1 (Experiment Runner). Must include cost guard. Read design from design.md, write to results/.",
+      "column": "backlog",
+      "labels": ["dev", "agents"],
+      "created": "2026-03-18",
+      "priority": "medium"
+    },
+    {
+      "id": "CARD-009",
+      "title": "Dashboard: connect to live board data",
+      "description": "Dashboard currently shows static data. Wire up /api/board route to read board/backlog.json. Reflect real card state.",
+      "column": "backlog",
+      "labels": ["dev", "dashboard"],
+      "created": "2026-03-18",
+      "priority": "medium"
+    },
+    {
+      "id": "CARD-010",
+      "title": "Symphony: decide Hypothesis A vs B vs C",
+      "description": "Review SYMPHONY.md hypotheses. Make a call on which to prototype first. Write decision to docs/symphony-decision.md.",
+      "column": "backlog",
+      "labels": ["symphony", "planning"],
+      "created": "2026-03-18",
+      "priority": "low"
+    }
+  ]
+}

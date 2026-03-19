@@ -1,0 +1,19 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+dashboard/.next/
+dashboard/out/
+
+# Editor
+.idea/
+.vscode/
+
+# Experiment artifacts (raw outputs — too large for git)
+experiments/*/results/raw.jsonl
