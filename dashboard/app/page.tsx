@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import { join } from "path";
 import KanbanBoard from "@/components/KanbanBoard";
+import RunsPanel, { RunsData } from "@/components/RunsPanel";
 
 interface Card {
   id: string;
@@ -30,7 +31,24 @@ function getBoardData(): BoardData {
   }
 }
 
+function getRunsData(): RunsData {
+  try {
+    const runsPath = join(process.cwd(), "..", "board", "runs.json");
+    const raw = readFileSync(runsPath, "utf-8");
+    return JSON.parse(raw);
+  } catch {
+    return { schema: "runs-v1", runs: [] };
+  }
+}
+
 export default function Home() {
   const board = getBoardData();
-  return <KanbanBoard board={board} />;
+  const runs = getRunsData();
+  return (
+    <>
+      <KanbanBoard board={board} />
+      <div className="border-t border-zinc-200 dark:border-zinc-800" />
+      <RunsPanel data={runs} />
+    </>
+  );
 }
